@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@+id/menu_nav_sign_file">
+
+    <fragment
+        android:id="@+id/menu_nav_sign_file"
+        android:name="com.letsclimbthis.esigtesttask.ui.signfile.FragmentSignFile"
+        android:label="@string/menu_sign_file"
+        tools:layout="@layout/fragment_sign_file" />
+
+    <fragment
+        android:id="@+id/menu_nav_certificates"
+        android:name="com.letsclimbthis.esigtesttask.ui.certificates.FragmentCertificates"
+        android:label="@string/menu_certificates"
+        tools:layout="@layout/fragment_certificates" />
+
+    <fragment
+        android:id="@+id/menu_nav_last_crash_report"
+        android:name="com.letsclimbthis.esigtesttask.ui.showlastcrash.FragmentShowLastCrash"
+        android:label="@string/menu_last_crash"
+        tools:layout="@layout/fragment_show_last_crash" />
+
+</navigation>

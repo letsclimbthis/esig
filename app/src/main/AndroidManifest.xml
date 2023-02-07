@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <queries>
+        <package android:name="com.ymlcyt.esig" />
+<!--        <package android:name="ru.cprocsp.ACSP" />-->
+    </queries>
+
+    <application
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/Theme.ESigTestTask"
+        tools:targetApi="29">
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.ESigTestTask.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="ru.cprocsp.ACSP.util.FileExplorerActivity"
+            android:configChanges="screenSize|orientation"
+            android:label="@string/FileExplorer"
+            android:theme="@style/CryptoPro.AppTheme"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="ru.cprocsp.intent.FILE_EXPLORER" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="ru.CryptoPro.JCSP.tools.common.window.DialogActivity"
+            android:configChanges="screenSize|orientation"
+            android:theme="@style/CryptoPro.AppTheme.Transparent.NoFloatingWindow"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="ru.CryptoPro.JCSP.tools.common.window.intent.DIALOG" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="ru.CryptoPro.JCSP.tools.common.window.DialogBioActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/CryptoPro.AppTheme.NoActionBar"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="ru.CryptoPro.JCSP.tools.common.window.intent.DIALOG_BIO" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+    </application>
+
+</manifest>

@@ -1,0 +1,37 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+plugins {
+    id 'com.android.application' version '7.4.0' apply false
+    id 'com.android.library' version '7.4.0' apply false
+    id 'org.jetbrains.kotlin.android' version '1.8.0' apply false
+    id 'com.google.dagger.hilt.android' version '2.44' apply false
+}
+
+//repositories {
+//
+//    mavenCentral()
+//
+////    // -PuseMavenLocal означает использование локального maven-репозитория.
+////    if (project.hasProperty('useMavenLocal')) { // && project.getProperty('useMavenLocal') == 'true') {
+////        repositories {
+////            mavenLocal()
+////        }
+////    }
+//
+//    maven {
+//        // Содержит наши релизные библиотеки с номером ревизии в названии,
+//        // например, JCP-2.0.XXXXX.jar, где XXXXX - номер ревизии.
+//        url "http://build-jcp/jcp_rep"
+//        allowInsecureProtocol = true
+//    }
+//
+//    maven {
+//        // Содержит наши релизные библиотеки без номера ревизии в названии,
+//        // например, JCP-2.0.jar, а также сторонние библиотеки, например,
+//        // asn1rt, proguard и другие.
+//        url "http://build-jcp/repository"
+//        allowInsecureProtocol = true
+//    }
+//
+//    google()
+//    jcenter()
+//}

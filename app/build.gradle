@@ -1,0 +1,112 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'com.google.dagger.hilt.android'
+}
+
+android {
+    namespace 'com.letsclimbthis.esigtesttask'
+    compileSdk 33
+
+    defaultConfig {
+        applicationId "com.letsclimbthis.esigtesttask"
+        minSdk 24
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+        multiDexEnabled true
+
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    buildFeatures {
+        viewBinding true
+        dataBinding true
+    }
+
+    packagingOptions {
+
+        // для загрузки нативных библиотек из APK в файловую систему
+        jniLibs {
+            useLegacyPackaging true
+            keepDebugSymbols += ['*/arm64-v8a/*.so', '*/armeabi-v7a/*.so', '*/x86_64/*.so', '*/x86/*.so']
+        }
+
+        // для предотвращения конфликта при сборке с использованием нескольких библиотек
+        resources {
+            excludes += ['META-INF/Digest.CP', 'META-INF/Sign.CP', 'META-INF/NOTICE.txt', 'META-INF/LICENSE.txt', 'META-INF/DEPENDENCIES']
+        }
+
+    }
+}
+
+configurations {
+    externalLibs
+}
+
+dependencies {
+
+    // android
+    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'androidx.appcompat:appcompat:1.6.0'
+    implementation 'com.google.android.material:material:1.8.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
+
+    // DI
+    implementation "com.google.dagger:hilt-android:2.44"
+    kapt "com.google.dagger:hilt-compiler:2.44"
+
+    implementation "commons-io:commons-io:2.7"
+
+    // testing
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+    // crypto provider
+    implementation fileTree(dir: 'libs', include: ['*.aar'])
+
+    implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
+    implementation 'org.ini4j:ini4j:0.5.1'
+    implementation files('libs/JCP-2.0.41971-release-210521.jar')
+    implementation files('libs/JCSP-android-2.0.41971-release-210521.jar')
+    implementation files('libs/AdES-core-2.0.41971-release-210521.jar')
+    implementation files('libs/ASN1P-2.0.41971-release-210521.jar')
+    implementation files('libs/asn1rt-5.74.0.jar')
+    implementation files('libs/CAdESAPI-2.0.41971-release-210521.jar')
+    implementation files('libs/cpSSL-2.0.41971-release-210521.jar')
+    implementation files('libs/JCPRequest-2.0.41971-release-210521.jar')
+    implementation files('libs/JCPRevCheck-2.0.41971-release-210521.jar')
+    implementation files('libs/JCPRevTools-2.0.41971-release-210521.jar')
+    implementation files('libs/JCPxml-2.0.41971-release-210521.jar')
+    implementation files('libs/XAdESAPI-2.0.41971-release-210521.jar')
+    implementation files('libs/XMLDSigRI-2.0.41971-release-210521.jar')
+    implementation files('libs/samples-2.0.41971-release-210521.jar')
+
+    implementation 'org.bouncycastle:bcprov-jdk15on:1.60'
+    implementation 'org.bouncycastle:bcpkix-jdk15on:1.60'
+
+}
+
+kapt {
+    correctErrorTypes true
+}

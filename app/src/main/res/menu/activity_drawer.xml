@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/menu_nav_sign_file"
+            android:title="@string/menu_sign_file" />
+        <item
+            android:id="@+id/menu_nav_certificates"
+            android:title="@string/menu_certificates" />
+        <item
+            android:id="@+id/menu_nav_last_crash_report"
+            android:title="@string/menu_last_crash" />
+    </group>
+</menu>
+
+    <!-- android:icon="@drawable/ic_menu_"-->

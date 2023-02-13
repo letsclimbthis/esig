@@ -1,13 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Button.Primary" parent="@style/Widget.AppCompat.Button.Colored">
-        <item name="colorButtonNormal">@color/colorPrimary</item>
-        <item name="android:textColor">@android:color/white</item>
+    <style name="Button.Primary.Borderless" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/spacing_1</item>
+        <item name="android:elevation">0dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/colorPrimary</item>
     </style>
 
-    <style name="Button.Primary.Borderless" parent="@style/Widget.AppCompat.Button.Borderless.Colored">
-        <item name="android:textColor">@color/colorPrimary</item>
+<!-- text views -->
+    <style name="text_view_base">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:gravity">start</item>
+    </style>
+
+    <!-- fragment sign file -->
+    <style name="tv_vertical_line">
+        <item name="android:layout_width">2dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_marginStart">@dimen/spacing_4</item>
+        <item name="android:background">@color/grey_10</item>
+    </style>
+    <style name="tv_vertical_line_lead" parent="tv_vertical_line">
+        <item name="android:layout_height">@dimen/spacing_7</item>
+    </style>
+
+    <style name="tv_step">
+        <item name="android:layout_width">@dimen/spacing_4.5</item>
+        <item name="android:layout_height">@dimen/spacing_4.5</item>
+        <item name="android:layout_marginStart">35dp</item>
+        <item name="android:background">@drawable/shape_round_solid</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="lyt_content">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/spacing_4.5</item>
+        <item name="android:layout_marginEnd">@dimen/spacing_4.5</item>
+        <item name="android:background">@drawable/background_round_outline</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="tv_sign_file_item_description_head" parent="text_view_base">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Small</item>
+        <item name="android:textColor">@color/grey_900</item>
+    </style>
+    <style name="tv_sign_file_item_description_detail" parent="text_view_base">
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Caption</item>
+    </style>
+    <style name="tv_sign_file_item_description_label" parent="@style/tv_sign_file_item_description_detail">
+        <item name="android:layout_marginTop">@dimen/spacing_1</item>
+        <item name="android:textColor">@color/grey_900</item>
+    </style>
+    <style name="tv_sign_file_item_description_body" parent="@style/tv_sign_file_item_description_detail">
+        <item name="android:textColor">@color/grey_600</item>
+    </style>
+
+    <!-- certificate list item -->
+    <style name="tv_certificate_main_info_head" parent="text_view_base">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
+        <item name="android:textColor">@color/grey_900</item>
+    </style>
+    <style name="tv_certificate_main_info_body" parent="text_view_base">
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Small</item>
+        <item name="android:textColor">@color/grey_900</item>
+    </style>
+    <style name="tv_certificate_detail" parent="text_view_base">
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body1</item>
+    </style>
+    <style name="tv_certificate_detail_label" parent="@style/tv_certificate_detail">
+        <item name="android:layout_marginTop">@dimen/spacing_1</item>
+        <item name="android:textColor">@color/grey_900</item>
+    </style>
+    <style name="tv_certificate_detail_body" parent="@style/tv_certificate_detail">
+        <item name="android:textColor">@color/grey_600</item>
     </style>
 
 

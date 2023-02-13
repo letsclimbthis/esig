@@ -6,11 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.letsclimbthis.esigtesttask.databinding.FragmentShowLastCrashBinding
+import com.letsclimbthis.esigtesttask.logMessage
 import com.letsclimbthis.esigtesttask.ui.utils.displayMessage
 import java.io.BufferedReader
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.io.InputStreamReader
+import java.util.logging.Logger
 
 class FragmentShowLastCrash: Fragment() {
 
@@ -42,8 +44,12 @@ class FragmentShowLastCrash: Fragment() {
         try {
             val reader = BufferedReader(InputStreamReader(requireActivity().openFileInput("stack.trace")))
             trace = reader.use(BufferedReader::readText)
-            val reader2 = BufferedReader(InputStreamReader(requireActivity().openFileInput("log")))
-            log = reader2.use(BufferedReader::readText)
+
+            log = if (logMessage.isNotEmpty()) logMessage
+            else {
+                val reader2 = BufferedReader(InputStreamReader(requireActivity().openFileInput("log")))
+                reader2.use(BufferedReader::readText)
+            }
         }
         catch(e: FileNotFoundException) {
             displayMessage(e.toString())

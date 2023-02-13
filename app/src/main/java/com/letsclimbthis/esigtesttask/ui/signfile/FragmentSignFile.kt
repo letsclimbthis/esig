@@ -1,5 +1,6 @@
 package com.letsclimbthis.esigtesttask.ui.signfile
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.*
@@ -14,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.letsclimbthis.esigtesttask.R
 import com.letsclimbthis.esigtesttask.databinding.FragmentSignFileBinding
+import com.letsclimbthis.esigtesttask.domain.signature.CSP
 import com.letsclimbthis.esigtesttask.log
 import com.letsclimbthis.esigtesttask.ui.signfile.uistate.FileState
 import com.letsclimbthis.esigtesttask.ui.signfile.uistate.KeyContainerState
@@ -22,6 +24,7 @@ import com.letsclimbthis.esigtesttask.ui.signfile.uistate.SignatureState
 import com.letsclimbthis.esigtesttask.ui.utils.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import ru.CryptoPro.JCSP.JCSP
 import java.io.File
 
 class FragmentSignFile :
@@ -77,8 +80,7 @@ class FragmentSignFile :
     private lateinit var tv_chosen_key_container_name_tag: String
     private lateinit var bt_sign_file_tag: String
     private lateinit var bt_show_signed_file_in_folder_tag: String
-    private lateinit var bt_send_signed_file_tag: String
-    private lateinit var bt_delete_signature_tag: String
+//    private lateinit var bt_send_signed_file_tag: String
 
     private fun initUiComponents() {
 
@@ -103,12 +105,12 @@ class FragmentSignFile :
         tv_chosen_key_container_name_tag = resources.getString(R.string.tv_chosen_key_container_name_tag)
         bt_sign_file_tag = resources.getString(R.string.bt_sign_file_tag)
         bt_show_signed_file_in_folder_tag = resources.getString(R.string.bt_show_signed_file_in_folder_tag)
-        bt_send_signed_file_tag = resources.getString(R.string.bt_send_signed_file_tag)
-        bt_delete_signature_tag = resources.getString(R.string.bt_delete_signature_tag)
+//        bt_send_signed_file_tag = resources.getString(R.string.bt_send_signed_file_tag)
 
         currentActiveLytAtChooseSection = binding.lytAddFile
         currentActiveLytAtSignSection = binding.lytLoadKeyContainers
         currentActiveLytAtManageSection = binding.lytManageSignedFile
+
     }
 
     private fun subscribeUiComponents() {
@@ -142,7 +144,6 @@ class FragmentSignFile :
                 }
             }
         }
-
     }
 
     private fun updateViewsWithFileState(newState: FileState) {
@@ -168,7 +169,7 @@ class FragmentSignFile :
                         tvChosenFileName.text = fileName
                         tvChosenFilePath.text = newState.file.path
                         tvChosenFileSize.text = newState.file.getSize()
-                        tvChosenFileDate.text = newState.file.lastModified().millisecondsToDate()
+                        tvChosenFileDate.text = newState.file.lastModified().toDateMinutes()
                         currentActiveLytAtChooseSection = lytShowFile
                     }
                     currentActiveLytAtChooseSection.expand()
@@ -199,6 +200,8 @@ class FragmentSignFile :
             is KeyContainerState.KeyContainersLoadingFailed
             -> {
                 binding.progressLoadKeyContainers.visibility = View.GONE
+                binding.btLoadKeyContainers.visibility = View.VISIBLE
+
             }
             is KeyContainerState.KeyContainersLoaded
             -> {
@@ -214,9 +217,15 @@ class FragmentSignFile :
                     val cert = newState.container.second
                     binding.apply {
                         tvChosenKeyContainerName.text = newState.container.first
-                        tvChosenKeyContainerOwnerName.text = cert.getCN()
-                        tvChosenKeyContainerCertificateNumber.text = cert.serialNumber.toString()
-                        tvChosenKeyContainerExpirationDate.text = cert.notAfter.toString()
+                        tvChosenKeyContainerOwnerName.text = cert.getSubjectName()
+                        tvChosenKeyContainerCertificateNumber.apply {
+                            val number = cert.serialNumber.toString()
+                            text = number
+                        }
+                        tvChosenKeyContainerExpirationDate.apply {
+                            val period = "${cert.notBefore.time.toDateDays()} - ${cert.notAfter.time.toDateDays()}"
+                            text = period
+                        }
                     }
                     currentActiveLytAtSignSection.expand()
                 }
@@ -233,8 +242,7 @@ class FragmentSignFile :
                     lytManageSignedFile.collapse()
                     progressSignFile.visibility = View.GONE
                     btShowSignedFileInFolder.isEnabled = false
-                    btSendSignedFile.isEnabled = false
-                    btDeleteSignature.isEnabled = false
+//                    btSendSignedFile.isEnabled = false
                 }
             }
             is SignatureState.SignatureNotBuilt
@@ -246,9 +254,13 @@ class FragmentSignFile :
             }
             is SignatureState.SignatureBuilt
             -> {
-                binding.progressSignFile.visibility = View.GONE
                 currentActiveLytAtSignSection.collapse()
                 currentActiveLytAtManageSection.expand()
+                binding.apply {
+                    progressSignFile.visibility = View.GONE
+                    btShowSignedFileInFolder.isEnabled = true
+//                    btSendSignedFile.isEnabled = true
+                }
             }
             is SignatureState.SignatureBuildingFailed
             -> {
@@ -310,16 +322,30 @@ class FragmentSignFile :
 
             bt_load_key_containers_file_tag
             -> {
+//                for (s in CSP.getSupportedKeyContainers()) log(s)
+
                 viewModel.loadKeyContainers()
             }
+
             tv_chosen_key_container_name_tag
             -> {
                 p0?.let {showMenu(p0, keyContainerAliasList)}
             }
+
             bt_sign_file_tag
             -> {
                 viewModel.signFile()
             }
+
+            bt_show_signed_file_in_folder_tag
+            -> {
+                openFolder()
+            }
+
+//            bt_send_signed_file_tag
+//            -> {
+//                share()
+//            }
         }
     }
 
@@ -331,10 +357,10 @@ class FragmentSignFile :
             if(filePath != null) {
                 val file = File(filePath)
                 viewModel.setChosenFileToSign(file)
-                log("FragmentSignFile: Received URI from outer activity for file: ${file.path}")
+                log("$className.getContent.launch(): Received URI from outer activity for file: ${file.path}")
 
             } else {
-                log("FragmentSignFile: Received URI from outer activity is null")
+                log("$className.getContent.launch(): Received URI from outer activity is null")
 
             }
         }
@@ -354,9 +380,25 @@ class FragmentSignFile :
         popupMenu.show()
     }
 
+    private fun openFolder() {
+        val fileState = viewModel.uiState.value.fileState
+        if (fileState is FileState.FileChosen) {
+            val selectedUri = Uri.parse(fileState.file.path)
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.setDataAndType(selectedUri, "resource/folder")
+            startActivity(intent)
+        }
+    }
+
+    private fun share() {
+        // TODO: implement
+    }
+
     override fun onStop() {
         super.onStop()
         currentUiState = null
     }
+
+    private val className = "FragmentSignFile"
 
 }

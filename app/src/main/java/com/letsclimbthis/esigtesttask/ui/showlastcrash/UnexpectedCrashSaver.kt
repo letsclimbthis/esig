@@ -19,7 +19,7 @@ class UnexpectedCrashSaver(val context: Context) : Thread.UncaughtExceptionHandl
 
         val stackTrace = p1.stackTrace
             .fold(
-                "\"------ LAST EXCEPTION ------\n\n$timeStamp\nException: $p1\n\n" +
+                "\n\n------ LAST EXCEPTION ------\n\n$timeStamp\nException: $p1\n\n" +
                         "-- Stack trace --\n"
             ) {
                     prev, ste -> "$prev\n$ste"

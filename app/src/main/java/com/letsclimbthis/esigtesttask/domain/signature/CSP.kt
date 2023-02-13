@@ -3,6 +3,7 @@ package com.letsclimbthis.esigtesttask.domain.signature
 import android.Manifest
 import android.app.Activity
 import com.letsclimbthis.esigtesttask.log
+import kotlinx.coroutines.async
 import ru.CryptoPro.JCP.JCP
 import ru.CryptoPro.JCSP.CSPConfig
 import ru.CryptoPro.JCSP.JCSP
@@ -56,24 +57,42 @@ object CSP {
         )
     }
 
-    fun getCertAndAliasFromKeyContainers(storeType: String): List<Pair<String, X509Certificate>> {
-        val keyStore = KeyStore.getInstance(storeType, JCSP.PROVIDER_NAME)
-        keyStore.load(null, null)
+    fun getCertAndAliasFromKeyContainers(): List<Pair<String, X509Certificate>> {
         val result = mutableListOf<Pair<String, X509Certificate>>()
-        for (alias in keyStore.aliases().toList()) {
-            val cert = keyStore.getCertificate(alias)
-            if (cert != null) {
-                result.add(Pair(alias, cert as X509Certificate))
+        val iterator = getSupportedKeyContainers().iterator()
+
+        while (iterator.hasNext()) {
+            val nextType = iterator.next()
+            log("CSP.getCertAndAliasFromKeyContainers(): try to read $nextType")
+            try {
+                val keyStore = KeyStore.getInstance(nextType, JCSP.PROVIDER_NAME)
+                keyStore.load(null, null)
+                for (alias in keyStore.aliases().toList()) {
+                    val cert = keyStore.getCertificate(alias)
+                    if (cert != null) {
+                        result.add(Pair(alias, cert as X509Certificate))
+                    }
+                }
+            } catch (e: Exception) {
             }
+
+            if (result.isNotEmpty()) break
         }
         return result
     }
 
-
+    private fun getSupportedKeyContainers(): List<String> {
+        return (
+                JCSP().services.map { it.toString() }
+                    .filter { it.contains("KeyStore") }
+                    .map { it.substring(it.indexOf("KeyStore.") + 9) }
+                    .map { it.dropLast(it.length - it.indexOf(" ->")) }
+                )
+    }
 
 }
 
 // data/data/nameApp/security/cacerts
-///data/data/com.letsclimbthis.esigtesttask/security/cacerts
+// data/data/com.letsclimbthis.esigtesttask/security/cacerts
 // AndroidCAStore
 

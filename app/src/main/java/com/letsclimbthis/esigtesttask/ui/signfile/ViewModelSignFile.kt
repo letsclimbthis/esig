@@ -14,8 +14,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import ru.CryptoPro.JCSP.JCSP
 import java.io.File
 import java.security.cert.X509Certificate
+import kotlin.contracts.contract
 import kotlin.properties.Delegates
 
 class ViewModelSignFile : ViewModel() {
@@ -53,43 +55,37 @@ class ViewModelSignFile : ViewModel() {
 
     fun loadKeyContainers() {
         _uiState.update {
-            buildUiStateWithNewComponent(KeyContainerState.KeyContainersLoading, emptyMessage)
+            buildUiStateWithNewComponent(
+                KeyContainerState.KeyContainersLoading,
+                emptyMessage
+            )
         }
+
         viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val reading = async {
-                    CSP.getCertAndAliasFromKeyContainers(typeOfKeyStorageToRead)
-                }
 
-                val list = reading.await()
+            val reading = async {
+                CSP.getCertAndAliasFromKeyContainers()
+            }
 
-                // update state with key container aliases,
-                // that were read from key storage,
-                // or with error message
-                withContext(Dispatchers.Main) {
-                    _uiState.update {
-                       if (list.isNotEmpty()) {
-                           loadedListOfKeyContainers = list
-                           buildUiStateWithNewComponent(
-                               KeyContainerState.KeyContainersLoaded(list.map { it.first }),
-                               emptyMessage
-                           )
-                       }
-                       else
-                           buildUiStateWithNewComponent(
-                               KeyContainerState.KeyContainersLoadingFailed,
-                               "There are no key containers"
-                           )
-                    }
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    _uiState.update {
+            val list = reading.await()
+
+            // update state with key container aliases,
+            // that were read from key storage,
+            // or with error message
+            withContext(Dispatchers.Main) {
+                _uiState.update {
+                    if (list.isNotEmpty()) {
+                        loadedListOfKeyContainers = list
+                        buildUiStateWithNewComponent(
+                            KeyContainerState.KeyContainersLoaded(list.map { it.first }),
+                            emptyMessage
+                        )
+
+                    } else
                         buildUiStateWithNewComponent(
                             KeyContainerState.KeyContainersLoadingFailed,
-                            e.toString()
+                            "There are no key containers"
                         )
-                    }
                 }
             }
         }

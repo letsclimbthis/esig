@@ -56,18 +56,15 @@
 
                 <View
                     android:id="@+id/vertical_line_step_1"
-                    android:layout_width="2dp"
-                    android:layout_height="@dimen/spacing_xxxlarge"
-                    android:layout_marginStart="@dimen/spacing_mxxxlarge"
-                    android:background="@color/grey_10"
+                    style="@style/tv_vertical_line_lead"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/tv_step_1"
                     android:tag="@string/tv_label_choose_file_tag"
-                    android:layout_width="@dimen/spacing_xlarge"
-                    android:layout_height="@dimen/spacing_xlarge"
+                    android:layout_width="@dimen/spacing_4.5"
+                    android:layout_height="@dimen/spacing_4.5"
                     android:layout_marginStart="@dimen/spacing_large"
                     android:background="@drawable/shape_round_solid"
                     android:gravity="center"
@@ -106,8 +103,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_label_choose_file"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                tools:visibility="visible">
+                app:layout_constraintBottom_toBottomOf="parent">
 
                 <LinearLayout
                     android:id="@+id/lyt_vertical_line_choose_file"
@@ -120,23 +116,15 @@
 
                     <View
                         android:id="@+id/vertical_line_choose_file"
-                        android:layout_width="2dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="@dimen/spacing_mxxxlarge"
-                        android:background="@color/grey_10" />
+                        style="@style/tv_vertical_line" />
                 </LinearLayout>
 
     <!--layout add file -->
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/lyt_add_file"
                     android:tag="@string/v_choose_file_tag"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/spacing_xlarge"
-                    android:layout_marginEnd="@dimen/spacing_xlarge"
-                    android:background="@drawable/background_round_outline"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
+                    style="@style/lyt_content"
+                    android:visibility="visible"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/lyt_vertical_line_choose_file"
                     app:layout_constraintTop_toTopOf="parent"
@@ -145,8 +133,8 @@
 
                     <ImageView
                         android:id="@+id/iv_choose_file"
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
                         android:layout_gravity="center"
                         android:layout_marginTop="@dimen/spacing_large"
                         app:layout_constraintBottom_toTopOf="@+id/tv_choose_file"
@@ -155,19 +143,15 @@
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintVertical_chainStyle="spread"
                         app:srcCompat="@drawable/ic_insert_drive"
-                        app:tint="@color/grey_400" />
+                        app:tint="@color/blue_800" />
 
                     <TextView
                         android:id="@+id/tv_choose_file"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="@dimen/spacing_large"
-                        android:layout_marginBottom="@dimen/spacing_large"
+                        style="@style/tv_sign_file_item_description_head"
                         android:gravity="center"
+                        android:layout_marginTop="@dimen/spacing_2"
+                        android:layout_marginBottom="@dimen/spacing_2"
                         android:text="@string/add_file"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                        android:textColor="@color/grey_400"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -177,15 +161,7 @@
     <!--layout show file -->
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/lyt_show_file"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:minHeight="60dp"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="@dimen/spacing_xlarge"
-                    android:layout_marginEnd="@dimen/spacing_xlarge"
-                    android:background="@drawable/background_round_outline"
-                    android:orientation="vertical"
-                    android:visibility="gone"
+                    style="@style/lyt_content"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/lyt_vertical_line_choose_file"
                     app:layout_constraintTop_toTopOf="parent"
@@ -193,130 +169,90 @@
 
                     <TextView
                         android:id="@+id/tv_chosen_file_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="@dimen/spacing_large"
-                        android:gravity="center"
+                        style="@style/tv_sign_file_item_description_head"
+                        android:layout_marginTop="@dimen/spacing_1"
                         android:text="@{chosenFileName}"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                        android:textColor="@color/grey_40"
+                        app:layout_constraintBottom_toTopOf="@+id/tv_chosen_file_path_label"
+                        app:layout_constraintEnd_toStartOf="@+id/imageButton"
+                        app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:text="Document.txt" />
 
                     <TextView
                         android:id="@+id/tv_chosen_file_path_label"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginStart="@dimen/spacing_medium"
-                        android:layout_marginTop="@dimen/spacing_xmedium"
-                        android:gravity="center"
-                        android:text="@string/path"
-                        android:textColor="@color/grey_40"
+                        style="@style/tv_sign_file_item_description_label"
+                        app:layout_constraintBottom_toTopOf="@+id/tv_chosen_file_path"
                         app:layout_constraintStart_toStartOf="@+id/tv_chosen_file_name"
                         app:layout_constraintTop_toBottomOf="@+id/tv_chosen_file_name"
-                        />
+                        android:text="@string/path" />
 
                     <TextView
                         android:id="@+id/tv_chosen_file_path"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginStart="@dimen/spacing_medium"
-                        android:gravity="center"
-                        android:text="@{chosenFilePath}"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                        android:textColor="@color/grey_40"
+                        style="@style/tv_sign_file_item_description_body"
+                        app:layout_constraintBottom_toTopOf="@+id/tv_chosen_file_size_label"
                         app:layout_constraintStart_toStartOf="@+id/tv_chosen_file_name"
                         app:layout_constraintTop_toBottomOf="@+id/tv_chosen_file_path_label"
+                        android:text="@{chosenFilePath}"
                         tools:text="//Storage/Folder/" />
 
                     <TextView
                         android:id="@+id/tv_chosen_file_size_label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginStart="@dimen/spacing_medium"
-                        android:layout_marginTop="@dimen/spacing_xmedium"
-                        android:gravity="center"
-                        android:text="@string/size"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                        android:textColor="@color/grey_40"
+                        style="@style/tv_sign_file_item_description_label"
+                        app:layout_constraintBottom_toTopOf="@+id/tv_chosen_file_date_label"
                         app:layout_constraintStart_toStartOf="@+id/tv_chosen_file_name"
                         app:layout_constraintTop_toBottomOf="@+id/tv_chosen_file_path"
-                        />
+                        android:text="@string/size" />
 
                     <TextView
                         android:id="@+id/tv_chosen_file_size"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginStart="@dimen/spacing_medium"
-                        android:gravity="center"
+                        style="@style/tv_sign_file_item_description_body"
+                        android:layout_marginStart="@dimen/spacing_0.5"
+                        app:layout_constraintStart_toEndOf="@+id/tv_chosen_file_size_label"
+                        app:layout_constraintTop_toTopOf="@+id/tv_chosen_file_size_label"
                         android:text="@{chosenFileSize}"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                        android:textColor="@color/grey_40"
-                        app:layout_constraintStart_toStartOf="@+id/tv_chosen_file_name"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_chosen_file_size_label"
                         tools:text="1.5 MB" />
 
                     <TextView
                         android:id="@+id/tv_chosen_file_date_label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginStart="@dimen/spacing_medium"
-                        android:layout_marginTop="@dimen/spacing_xmedium"
-                        android:gravity="center"
-                        android:text="@string/last_modified"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                        android:textColor="@color/grey_40"
+                        style="@style/tv_sign_file_item_description_label"
+                        android:layout_marginBottom="@dimen/spacing_1"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="@+id/tv_chosen_file_name"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_chosen_file_size"
-                        />
+                        app:layout_constraintTop_toBottomOf="@+id/tv_chosen_file_size_label"
+                        android:text="@string/last_modified" />
 
                     <TextView
                         android:id="@+id/tv_chosen_file_date"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginStart="@dimen/spacing_medium"
-                        android:layout_marginBottom="@dimen/spacing_large"
-                        android:gravity="center"
+                        style="@style/tv_sign_file_item_description_body"
+                        android:layout_marginStart="@dimen/spacing_0.5"
+                        app:layout_constraintStart_toEndOf="@+id/tv_chosen_file_date_label"
+                        app:layout_constraintTop_toTopOf="@+id/tv_chosen_file_date_label"
                         android:text="@{chosenFileDate}"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                        android:textColor="@color/grey_40"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="@+id/tv_chosen_file_name"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_chosen_file_date_label"
                         tools:text="01/01/2022" />
 
                     <ImageButton
-                        android:tag="@string/bt_cancel_choice_of_file_tag"
-                        android:layout_width="?attr/actionBarSize"
-                        android:layout_height="?attr/actionBarSize"
+                        android:id="@+id/imageButton"
+                        android:layout_width="@dimen/spacing_5.5"
+                        android:layout_height="@dimen/spacing_5.5"
                         android:background="?attr/selectableItemBackgroundBorderless"
+                        android:onClick="@{clickHandler::onClick}"
+                        android:tag="@string/bt_cancel_choice_of_file_tag"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/ic_close"
-                        app:tint="@color/red_700"
-                        android:onClick="@{clickHandler::onClick}"
-                        />
+                        app:tint="@color/red_700" />
 
                     <ImageButton
-                        android:tag="@string/bt_confirm_choice_of_file_tag"
-                        android:layout_width="?attr/actionBarSize"
-                        android:layout_height="?attr/actionBarSize"
+                        android:layout_width="@dimen/spacing_5.5"
+                        android:layout_height="@dimen/spacing_5.5"
                         android:background="?attr/selectableItemBackgroundBorderless"
+                        android:onClick="@{clickHandler::onClick}"
+                        android:tag="@string/bt_confirm_choice_of_file_tag"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:srcCompat="@drawable/ic_done"
-                        app:tint="@color/green_700"
-                        android:onClick="@{clickHandler::onClick}"
-                        />
+                        app:tint="@color/green_700" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -330,10 +266,7 @@
 
                 <View
                     android:id="@+id/vertical_line_step_2"
-                    android:layout_width="2dp"
-                    android:layout_height="@dimen/spacing_xxxxlarge"
-                    android:layout_marginStart="@dimen/spacing_mxxxlarge"
-                    android:background="@color/grey_10"
+                    style="@style/tv_vertical_line_lead"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -394,23 +327,13 @@
 
                     <View
                         android:id="@+id/vertical_line_sign_file"
-                        android:layout_width="2dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="@dimen/spacing_mxxxlarge"
-                        android:background="@color/grey_10" />
+                        style="@style/tv_vertical_line" />
                 </LinearLayout>
 
     <!--layout load key containers -->
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/lyt_load_key_containers"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:minHeight="60dp"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="@dimen/spacing_xlarge"
-                    android:layout_marginEnd="@dimen/spacing_xlarge"
-                    android:orientation="vertical"
-                    android:visibility="gone"
+                    style="@style/lyt_content"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/lyt_vertical_line_sign_file"
                     app:layout_constraintTop_toTopOf="parent"
@@ -420,8 +343,8 @@
                         android:id="@+id/bt_load_key_containers"
                         android:tag="@string/bt_load_key_containers_file_tag"
                         style="@style/Button.Primary.Borderless"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:gravity="center"
                         android:onClick="@{clickHandler::onClick}"
                         android:tint="@color/green_600"
@@ -449,29 +372,16 @@
     <!--layout show key container -->
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/lyt_show_key_container"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="@dimen/spacing_xlarge"
-                    android:layout_marginEnd="@dimen/spacing_xlarge"
-                    android:minHeight="60dp"
-                    android:orientation="vertical"
-                    android:visibility="gone"
+                    style="@style/lyt_content"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/lyt_vertical_line_sign_file"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:visibility="visible">
+                    tools:visibility="gone">
 
                     <TextView
                         android:id="@+id/tv_chosen_key_container_name"
                         android:tag="@string/tv_chosen_key_container_name_tag"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="start"
-                        android:text="@{chosenKeyContainerName}"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                        android:textColor="@color/grey_40"
+                        style="@style/tv_sign_file_item_description_head"
                         app:layout_constraintBottom_toTopOf="@+id/tv_chosen_key_container_owner_name_label"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
@@ -479,104 +389,73 @@
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintVertical_bias="0.20999998"
                         app:layout_constraintVertical_chainStyle="packed"
+                        android:text="@{chosenKeyContainerName}"
                         tools:text="SCARD\JACARTA"
                         android:onClick="@{clickHandler::onClick}"
                         />
 
                     <TextView
                         android:id="@+id/tv_chosen_key_container_owner_name_label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="@dimen/spacing_xmedium"
-                        android:gravity="center"
-                        android:text="@string/key_owner"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                        android:textColor="@color/grey_40"
+                        style="@style/tv_sign_file_item_description_label"
                         app:layout_constraintBottom_toTopOf="@+id/tv_chosen_key_container_owner_name"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="@+id/tv_chosen_key_container_name"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_chosen_key_container_name" />
+                        app:layout_constraintTop_toBottomOf="@+id/tv_chosen_key_container_name"
+                        android:text="@string/key_owner" />
 
                     <TextView
                         android:id="@+id/tv_chosen_key_container_owner_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="start"
-                        android:text="@{chosenKeyContainerOwnerName}"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                        android:textColor="@color/grey_40"
+                        style="@style/tv_sign_file_item_description_body"
                         app:layout_constraintBottom_toTopOf="@+id/tv_chosen_key_container_certificate_number_label"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="@+id/tv_chosen_key_container_name"
                         app:layout_constraintTop_toBottomOf="@+id/tv_chosen_key_container_owner_name_label"
+                        android:text="@{chosenKeyContainerOwnerName}"
                         tools:text="John Doe" />
 
                     <TextView
                         android:id="@+id/tv_chosen_key_container_certificate_number_label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="@dimen/spacing_xmedium"
-                        android:gravity="center"
-                        android:text="@string/certificate"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                        android:textColor="@color/grey_40"
+                        style="@style/tv_sign_file_item_description_label"
                         app:layout_constraintBottom_toTopOf="@+id/tv_chosen_key_container_certificate_number"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="@+id/tv_chosen_key_container_name"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_chosen_key_container_owner_name" />
+                        app:layout_constraintTop_toBottomOf="@+id/tv_chosen_key_container_owner_name"
+                        android:text="@string/certificate_serial"
+                        />
 
                     <TextView
                         android:id="@+id/tv_chosen_key_container_certificate_number"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="start"
-                        android:text="@{chosenKeyContainerCertificateNumber}"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                        android:textColor="@color/grey_40"
+                        style="@style/tv_sign_file_item_description_body"
                         app:layout_constraintBottom_toTopOf="@+id/tv_chosen_key_container_expiration_date_label"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="@+id/tv_chosen_key_container_name"
                         app:layout_constraintTop_toBottomOf="@+id/tv_chosen_key_container_certificate_number_label"
+                        android:text="@{chosenKeyContainerCertificateNumber}"
                         tools:text="0782CC00ECDA50BA4886C4DDCCCD507D" />
 
                     <TextView
                         android:id="@+id/tv_chosen_key_container_expiration_date_label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="@dimen/spacing_xmedium"
-                        android:gravity="center"
-                        android:text="@string/expiry_date"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                        android:textColor="@color/grey_40"
+                        style="@style/tv_sign_file_item_description_label"
                         app:layout_constraintBottom_toTopOf="@+id/tv_chosen_key_container_expiration_date"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="@+id/tv_chosen_key_container_name"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_chosen_key_container_certificate_number" />
+                        app:layout_constraintTop_toBottomOf="@+id/tv_chosen_key_container_certificate_number"
+                        android:text="@string/certificate_period" />
 
                     <TextView
                         android:id="@+id/tv_chosen_key_container_expiration_date"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="start"
-                        android:text="@{chosenKeyContainerExpirationDate}"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                        android:textColor="@color/grey_40"
+                        style="@style/tv_sign_file_item_description_body"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="@+id/tv_chosen_key_container_name"
                         app:layout_constraintTop_toBottomOf="@+id/tv_chosen_key_container_expiration_date_label"
+                        android:text="@{chosenKeyContainerExpirationDate}"
                         tools:text="01/01/2023" />
 
                     <androidx.appcompat.widget.AppCompatButton
@@ -616,10 +495,7 @@
 
                 <View
                     android:id="@+id/vertical_line_step_3"
-                    android:layout_width="2dp"
-                    android:layout_height="@dimen/spacing_xxxxlarge"
-                    android:layout_marginStart="@dimen/spacing_mxxxlarge"
-                    android:background="@color/grey_10"
+                    style="@style/tv_vertical_line_lead"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -681,71 +557,46 @@
 
                     <View
                         android:id="@+id/vertical_line_manage_file"
-                        android:layout_width="2dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="@dimen/spacing_mxxxlarge"
-                        android:background="@color/grey_10" />
+                        style="@style/tv_vertical_line" />
                 </LinearLayout>
 
+            <!--layout manage file actions -->
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="@dimen/spacing_xlarge"
-                    android:layout_marginEnd="@dimen/spacing_xlarge"
-                    android:minHeight="60dp"
-                    android:orientation="vertical"
+                    style="@style/lyt_content"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/lyt_vertical_line_manage_file"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:visibility="visible">
 
                     <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/bt_show_signed_file_in_folder"
+                        style="@style/Button.Primary.Borderless"
+                        android:layout_width="match_parent"
+                        android:layout_marginBottom="@dimen/spacing_1"
+                        android:onClick="@{clickHandler::onClick}"
                         android:tag="@string/bt_show_signed_file_in_folder_tag"
-                        style="@style/Button.Primary.Borderless"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/spacing_xmedium"
-                        android:gravity="center"
-                        android:onClick="@{clickHandler::onClick}"
                         android:text="@string/show_in_folder"
-                        android:tint="@color/green_600"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        />
+                        app:layout_constraintTop_toTopOf="parent" />
 
-                    <androidx.appcompat.widget.AppCompatButton
-                        android:id="@+id/bt_send_signed_file"
-                        android:tag="@string/bt_send_signed_file_tag"
-                        style="@style/Button.Primary.Borderless"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/spacing_xmedium"
-                        android:gravity="center"
-                        android:onClick="@{clickHandler::onClick}"
-                        android:text="@string/send"
-                        android:tint="@color/green_600"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/bt_show_signed_file_in_folder"
-                        tools:clickable="false" />
-
-                    <androidx.appcompat.widget.AppCompatButton
-                        android:id="@+id/bt_delete_signature"
-                        android:tag="@string/bt_delete_signature_tag"
-                        style="@style/Button.Primary.Borderless"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/spacing_xmedium"
-                        android:gravity="center"
-                        android:onClick="@{clickHandler::onClick}"
-                        android:text="@string/delete_signature"
-                        android:tint="@color/green_600"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/bt_send_signed_file"
-                        tools:clickable="false" />
+<!--                    <androidx.appcompat.widget.AppCompatButton-->
+<!--                        android:id="@+id/bt_send_signed_file"-->
+<!--                        style="@style/Button.Primary.Borderless"-->
+<!--                        android:layout_marginBottom="@dimen/spacing_1"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:onClick="@{clickHandler::onClick}"-->
+<!--                        android:tag="@string/bt_send_signed_file_tag"-->
+<!--                        android:text="@string/send"-->
+<!--                        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                        app:layout_constraintEnd_toEndOf="parent"-->
+<!--                        app:layout_constraintHorizontal_bias="0.5"-->
+<!--                        app:layout_constraintStart_toStartOf="parent"-->
+<!--                        app:layout_constraintTop_toBottomOf="@+id/bt_show_signed_file_in_folder" />-->
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -759,10 +610,7 @@
 
                 <View
                     android:id="@+id/vertical_bottom"
-                    android:layout_width="2dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="@dimen/spacing_mxxxlarge"
-                    android:background="@color/grey_10"
+                    style="@style/tv_vertical_line"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>

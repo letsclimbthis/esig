@@ -8,36 +8,34 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
+<!-- titles for menu items in the drawer menu -->
     <string name="menu_sign_file">Sign file</string>
     <string name="menu_certificates">Certificates</string>
     <string name="menu_last_crash">Last crash report</string>
 
-
-    <string name="certificate_serial">Serial number</string>
-    <string name="certificate_issuer">Issuer</string>
-
-    <!-- View text -->
+<!-- content for views that can display some text -->
     <string name="choose_file">Choose file</string>
     <string name="add_file">Add file</string>
     <string name="path">Path</string>
     <string name="size">Size</string>
     <string name="last_modified">Last modified</string>
-
     <string name="load_key_containers">Load key containers</string>
     <string name="key_owner">Key owner</string>
-    <string name="certificate">Certificate serial</string>
-    <string name="expiry_date">Valid until</string>
     <string name="sign_file">Sign file</string>
     <string name="sign">Sign</string>
     <string name="delete_certificate">Delete certificate</string>
-
     <string name="manage_file">Manage file</string>
     <string name="show_in_folder">Show in folder</string>
     <string name="send">Send</string>
     <string name="delete_signature">Delete signature</string>
+    <!-- certificate -->
+    <string name="certificate_serial">Serial number</string>
+    <string name="certificate_issuer">Issuer</string>
+    <string name="certificate_subject">Subject</string>
+    <string name="certificate_key_algorithm">Key algorithm</string>
+    <string name="certificate_period">Valid</string>
 
-
-    <!-- View tag -->
+<!-- tags for views that were declared having a tag -->
     <string name="tv_label_choose_file_tag">tv_label_choose_file</string>
     <string name="v_choose_file_tag">v_choose_file</string>
     <string name="bt_cancel_choice_of_file_tag">bt_cancel_choice_of_file</string>
@@ -54,8 +52,15 @@
     <string name="bt_delete_signature_tag">bt_delete_signature</string>
 
     <string name="fab_certificate_list_tag">fab_certificate_list</string>
+    <string name="ib_certificate_list_delete_tag">ib_delete_certificate</string>
 
 
     <string name="tv_certificate_name_tag">tv_certificate_name</string>
+
+
+    <string-array name="view_pager_titles_of_pages">
+        <item>Root</item>
+        <item>Intermediate</item>
+    </string-array>
 
 </resources>

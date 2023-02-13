@@ -20,11 +20,11 @@ import java.util.*
 object PKCS7 {
 
     suspend fun createSign(fileToSignPath: String, storeType: String, containerAlias: String) = coroutineScope {
-        log("PKCS7.createSign2()")
+        log("$className.createSign() call")
 
         val keyStore = KeyStore.getInstance(storeType, JCSP.PROVIDER_NAME)
         keyStore.load(null, null)
-        log("keyStore loaded")
+        log("$className: keyStore loaded")
 
         val signatureFileName = "$fileToSignPath.p7b"
         val certificate = keyStore.getCertificate(containerAlias)
@@ -40,7 +40,7 @@ object PKCS7 {
         signature.update(inputBytes)
         val signatureValue = signature.sign()
 
-        log("signature value obtained")
+        log("$className: signature value obtained")
 
         val result = buildSignature(
              signatureValue,
@@ -84,7 +84,7 @@ object PKCS7 {
             version = CMSVersion(1L)
             digestAlgorithms = DigestAlgorithmIdentifiers(1)
         }
-        log("contentInfo initialized")
+        log("$className: contentInfo initialized")
 
 
         // Добавляем идентификатор алгоритма хеширования
@@ -99,21 +99,23 @@ object PKCS7 {
         // пробуем получить цепочку сертификатов из объекта KeyStoreChain, который предоставляется
         // экземпляром KeyStore (абстракция ключевого хранилища, содержащего сертификат подписанта)
         val chainCertificates = if (keyStoreChain.size > 1) {
-            log("keyStoreChain.size > 1")
+            log("$className: using keychain from keystore")
             keyStoreChain.toList()
         }
         // или пробуем построить цепочку сертификатов самостоятельно
         else {
-            log("keyStoreChain.size <= 1")
+            log("$className: start building keychain")
+
+            val rootAndCommon = CertStoreUtil.loadCertificatesFromStoreByCategory()
 
             // все корневые сертификаты необходимо добавить в TrustAnchor
             // для корректного построения цепочки
-            val rootCerts = CertStoreUtil.loadTrustCertStoreCertificates()
+            val rootCerts = rootAndCommon[0]
             val trustAnchorSet = HashSet<TrustAnchor>()
             for (rc in rootCerts) {
                 trustAnchorSet.add(TrustAnchor(rc, null))
             }
-            log("trustAnchorSet initialized")
+            log("$className: trustAnchorSet initialized")
 
 
             val builderParams = PKIXBuilderParameters(trustAnchorSet, null as CertSelector?)
@@ -126,7 +128,10 @@ object PKCS7 {
             // при условии что в имеющихся сертификатах есть ссылки, на недостающие
 
             // получаем промежуточные сертификаты из локального хранилища
-            val _certs = CertStoreUtil.loadCommonCertStoreCertificates().toTypedArray()
+//            val _certs = CertStoreUtil.loadCommonCertStoreCertificates().toTypedArray()
+//            val _certs = rootAndCommon[1].toTypedArray()
+            val _certs = rootAndCommon[1].toTypedArray()
+            // /storage/emulated/0/Sig/CA_FNS_Russia_2019_UL.crt
 
             val certs: MutableList<Certificate> = ArrayList(0)
             for (i in _certs.indices) certs.add(_certs[i])
@@ -143,13 +148,13 @@ object PKCS7 {
             builderParams.isRevocationEnabled = false
 
             // получаем certPath
-            log("start initializing CertPathBuilder")
+            log("$className: start initializing CertPathBuilder")
             val certPathBuilderResult = CertPathBuilder
                 .getInstance("CPPKIX", "RevCheck")
                 .build(builderParams) as PKIXCertPathBuilderResult
-            log("CertPathBuilder initialized")
+            log("$className: CertPathBuilder initialized")
             val certPath = certPathBuilderResult.certPath
-            log("certPath build")
+            log("$className: certPath build")
 
             // validate certPath
             // val certPathValidator = CertPathValidator.getInstance("CPPKIX", "RevCheck")
@@ -224,5 +229,7 @@ object PKCS7 {
         contentInfo.encode(asn1BerEncodeBuffer, true)
         return asn1BerEncodeBuffer.msgCopy
     }
+
+    private const val className = "PKCS7"
 
 }

@@ -6,7 +6,28 @@
     <data>
         <variable
             name="clickHandler"
-            type="com.letsclimbthis.esigtesttask.ui.certificates.AdapterCertificateList.CertificatesItemViewHolder" />
+            type="com.letsclimbthis.esigtesttask.ui.certificates.recyclerview.AdapterCertificateList.CertificatesItemViewHolder" />
+        <variable
+            name="certSubject"
+            type="String" />
+        <variable
+            name="certValidity"
+            type="String" />
+        <variable
+            name="certSerial"
+            type="String" />
+        <variable
+            name="certIssuerDetail"
+            type="String" />
+        <variable
+            name="certSubjectDetail"
+            type="String" />
+        <variable
+            name="certKeyAlgorithm"
+            type="String" />
+        <variable
+            name="certValidityDetail"
+            type="String" />
     </data>
 
     <androidx.cardview.widget.CardView
@@ -19,114 +40,223 @@
         app:cardElevation="3dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/lyt_certificate_list"
+            android:id="@+id/lyt_certificate_list_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:minHeight="@dimen/spacing_xxlarge"
-            android:onClick="@{clickHandler::onClick}"
-            >
+            android:layout_margin="8dp">
 
-            <TextView
-                android:id="@+id/tv_certificate_serial_label"
-                android:tag="@string/tv_chosen_key_container_name_tag"
-                android:layout_width="wrap_content"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="start"
-                android:text="@string/certificate_serial"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:textColor="@color/grey_900"
-                app:layout_constraintBottom_toTopOf="@+id/tv_certificate_serial"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintBottom_toTopOf="@+id/lyt_certificate_properties"
+                app:layout_constraintEnd_toStartOf="@+id/bt_certificate_expand_collapse_properties"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/iv_certificate"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="@dimen/spacing_1"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_certificate_period"
+                    app:layout_constraintEnd_toStartOf="@+id/tv_certificate_subject"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/tv_certificate_subject"
+                    app:srcCompat="@drawable/ic_insert_drive"
+                    app:tint="@color/blue_800" />
+
+                <TextView
+                    android:id="@+id/tv_certificate_subject"
+                    style="@style/tv_certificate_main_info_head"
+                    android:text="@{certSubject}"
+                    app:layout_constraintBottom_toTopOf="@+id/tv_certificate_period"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/iv_certificate"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_chainStyle="packed"
+                    tools:text="Federal tax services" />
+
+                <TextView
+                    android:id="@+id/tv_certificate_period"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="start"
+                    android:text="@{certValidity}"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="@color/grey_900"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/tv_certificate_subject"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_certificate_subject"
+                    tools:text="01.01.2020 - 31.12.2022" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <ImageButton
+                android:id="@+id/bt_certificate_expand_collapse_properties"
+                android:tag="ib_certificate_expand_collapse_properties"
+                android:layout_width="?attr/actionBarSize"
+                android:layout_height="?attr/actionBarSize"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.20999998"
+                app:layout_constraintBottom_toTopOf="@+id/lyt_certificate_properties"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintVertical_chainStyle="packed"
-                />
+                app:srcCompat="@drawable/ic_expand_arrow"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/grey_80"
+                android:onClick="@{clickHandler::onClick}"/>
 
-            <TextView
-                android:id="@+id/tv_certificate_serial"
-                android:tag="@string/tv_chosen_key_container_name_tag"
-                android:layout_width="wrap_content"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/lyt_certificate_properties"
+                android:tag="lyt_certificate_properties_tag"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="start"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                android:textColor="@color/grey_40"
-                app:layout_constraintBottom_toTopOf="@+id/tv_certificate_issuer_name_label"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_certificate_serial_label"
-                app:layout_constraintVertical_bias="0.20999998"
-                app:layout_constraintVertical_chainStyle="packed"
-                tools:text="50BA4886C4DDCCCD507D0782CC00ECAD"
-                />
-
-            <TextView
-                android:id="@+id/tv_certificate_issuer_name_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="@dimen/spacing_xmedium"
-                android:gravity="center"
-                android:text="@string/certificate_issuer"
-                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                android:textColor="@color/grey_900"
-                app:layout_constraintBottom_toTopOf="@+id/tv_certificate_issuer_name"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/tv_certificate_serial"
-                app:layout_constraintTop_toBottomOf="@+id/tv_certificate_serial" />
-
-            <TextView
-                android:id="@+id/tv_certificate_issuer_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="start"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                android:textColor="@color/grey_40"
-                app:layout_constraintBottom_toTopOf="@+id/tv_certificate_expiration_date_label"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/tv_certificate_serial"
-                app:layout_constraintTop_toBottomOf="@+id/tv_certificate_issuer_name_label"
-                tools:text="John Doe" />
-
-            <TextView
-                android:id="@+id/tv_certificate_expiration_date_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="@dimen/spacing_xmedium"
-                android:gravity="center"
-                android:text="@string/expiry_date"
-                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                android:textColor="@color/grey_900"
-                app:layout_constraintBottom_toTopOf="@+id/tv_certificate_expiration_date"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/tv_certificate_serial"
-                app:layout_constraintTop_toBottomOf="@+id/tv_certificate_issuer_name" />
-
-            <TextView
-                android:id="@+id/tv_certificate_expiration_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="start"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                android:textColor="@color/grey_40"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/tv_certificate_serial"
-                app:layout_constraintTop_toBottomOf="@+id/tv_certificate_expiration_date_label"
-                tools:text="01/01/2023" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/bt_certificate_expand_collapse_properties"
+                android:visibility="gone"
+                tools:visibility="visible">
 
+                <TextView
+                    android:id="@+id/tv_certificate_serial_label"
+                    style="@style/tv_certificate_detail_label"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toTopOf="@+id/tv_certificate_serial"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintVertical_chainStyle="packed"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    android:text="@string/certificate_serial"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_certificate_serial"
+                    style="@style/tv_certificate_detail_body"
+                    app:layout_constraintBottom_toTopOf="@+id/tv_certificate_issuer_detail_label"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_certificate_serial_label"
+                    app:layout_constraintVertical_chainStyle="packed"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    android:text="@{certSerial}"
+                    tools:text="50BA4886C4DDCCCD507D0782CC00ECAD" />
+
+                <TextView
+                    android:id="@+id/tv_certificate_issuer_detail_label"
+                    style="@style/tv_certificate_detail_label"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_certificate_serial"
+                    app:layout_constraintBottom_toTopOf="@+id/tv_certificate_issuer_detail"
+                    app:layout_constraintStart_toStartOf="@+id/tv_certificate_serial"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintVertical_chainStyle="packed"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    android:text="@string/certificate_issuer"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_certificate_issuer_detail"
+                    style="@style/tv_certificate_detail_body"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_certificate_issuer_detail_label"
+                    app:layout_constraintBottom_toTopOf="@+id/tv_certificate_subject_detail_label"
+                    app:layout_constraintStart_toStartOf="@+id/tv_certificate_serial"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintVertical_chainStyle="packed"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    android:text="@{certIssuerDetail}"
+                    tools:text="Federal tax services" />
+
+                <TextView
+                    android:id="@+id/tv_certificate_subject_detail_label"
+                    style="@style/tv_certificate_detail_label"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_certificate_issuer_detail"
+                    app:layout_constraintBottom_toTopOf="@+id/tv_certificate_subject_detail"
+                    app:layout_constraintStart_toStartOf="@+id/tv_certificate_serial"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintVertical_chainStyle="packed"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    android:text="@string/certificate_subject"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_certificate_subject_detail"
+                    style="@style/tv_certificate_detail_body"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_certificate_subject_detail_label"
+                    app:layout_constraintBottom_toTopOf="@+id/tv_certificate_period_detail_label"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/tv_certificate_serial"
+                    app:layout_constraintVertical_chainStyle="packed"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    android:text="@{certSubjectDetail}"
+                    tools:text="Federal tax services" />
+
+<!--                <TextView-->
+<!--                    android:id="@+id/tv_certificate_period_detail_label"-->
+<!--                    style="@style/tv_certificate_detail_label"-->
+<!--                    app:layout_constraintTop_toBottomOf="@+id/tv_certificate_subject_detail"-->
+<!--                    app:layout_constraintBottom_toTopOf="@+id/tv_certificate_period_detail"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintStart_toStartOf="@+id/tv_certificate_serial"-->
+<!--                    app:layout_constraintVertical_chainStyle="packed"-->
+<!--                    app:layout_constraintHorizontal_bias="0.0"-->
+<!--                    android:text="@string/certificate_key_algorithm"-->
+<!--                    />-->
+
+<!--                <TextView-->
+<!--                    android:id="@+id/tv_certificate_period_detail"-->
+<!--                    style="@style/tv_certificate_detail_body"-->
+<!--                    app:layout_constraintTop_toBottomOf="@+id/tv_certificate_period_detail_label"-->
+<!--                    app:layout_constraintBottom_toTopOf="@+id/tv_certificate_key_algorithm_label"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintStart_toStartOf="@+id/tv_certificate_serial"-->
+<!--                    app:layout_constraintVertical_chainStyle="packed"-->
+<!--                    app:layout_constraintHorizontal_bias="0.0"-->
+<!--                    android:text="@{certKeyAlgorithm}"-->
+<!--                    tools:text="GOST 2012 256" />-->
+
+                <TextView
+                    android:id="@+id/tv_certificate_period_detail_label"
+                    style="@style/tv_certificate_detail_label"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_certificate_subject_detail"
+                    app:layout_constraintBottom_toTopOf="@+id/tv_certificate_period_detail"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/tv_certificate_serial"
+                    app:layout_constraintVertical_chainStyle="packed"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    android:text="@string/certificate_period"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_certificate_period_detail"
+                    style="@style/tv_certificate_detail_body"
+                    android:text="@{certValidityDetail}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/ib_delete_certificate"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="@+id/tv_certificate_serial"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_certificate_period_detail_label"
+                    app:layout_constraintVertical_chainStyle="packed"
+                    tools:text="not before 01/01/2020\nnot after 01/01/2023" />
+
+                <ImageButton
+                    android:id="@+id/ib_delete_certificate"
+                    android:tag="ib_certificate_list_delete"
+                    style="@style/Button.Primary.Borderless"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:onClick="@{clickHandler::onClick}"
+                    android:text="@string/sign"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:srcCompat="@drawable/ic_delete"
+                    app:tint="@color/grey_80" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 

@@ -1,9 +1,11 @@
 package com.letsclimbthis.esigtesttask.domain.signature
 
 import com.letsclimbthis.esigtesttask.log
-import ru.CryptoPro.JCP.JCP
+import com.letsclimbthis.esigtesttask.ui.utils.getIssuerName
+import com.letsclimbthis.esigtesttask.ui.utils.getSubjectName
 import ru.CryptoPro.JCSP.CSPConfig
 import ru.CryptoPro.JCSP.support.BKSTrustStore
+import ru.CryptoPro.JCSP.JCSP
 import java.io.*
 import java.security.KeyStore
 import java.security.cert.CertificateFactory
@@ -11,44 +13,95 @@ import java.security.cert.X509Certificate
 
 object CertStoreUtil {
 
-    fun loadTrustCertStoreCertificates(): List<X509Certificate> {
-        return getKeyStore(getTrustStorePath(), getTrustStoreName())?.let { loadCertStoreCertificates(it) } ?: listOf()
+//    // returns list of certificates or an empty list in case of error
+//    fun loadRootCertStoreCertificates(): List<X509Certificate> {
+//        log("$CLASS_NAME.loadTrustCertStoreCertificates() call")
+//        return getKeyStore(getRootCertStorePath(), getRootCertStoreName())?.let { loadCertStoreCertificates(it) } ?: listOf()
+//    }
+
+//    // returns list of certificates or an empty list in case of error
+//    fun loadCommonCertStoreCertificates(): List<X509Certificate> {
+//        log("$CLASS_NAME.loadCommonCertStoreCertificates() call")
+//        return getKeyStore(getCommonCertStorePath(), getCommonCertStoreName())?.let { loadCertStoreCertificates(it) } ?: listOf()
+//    }
+
+    // returns array of lists of certificates or an empty list in case of error
+    // array[0] - list of root certificates
+    // array[1] - list of common certificates
+    fun loadCertificatesFromStoreByCategory(): Array<List<X509Certificate>> {
+        log("$CLASS_NAME.loadCertificatesFromStoreByCategory() call")
+        val list = getKeyStore(getRootCertStorePath(), getRootCertStoreName())?.let { loadCertStoreCertificates(it) } ?: listOf()
+        val root = list.filter { it.getIssuerName() == it.getSubjectName()}
+        val common = list.filter { it.getIssuerName() != it.getSubjectName()}
+        log("$CLASS_NAME.loadCertificatesFromStoreByCategory(): certificate list size: root= ${root.size}, common = ${common.size} ")
+        return arrayOf(root,common)
     }
 
-    fun loadCommonCertStoreCertificates(): List<X509Certificate> {
-        return getKeyStore(getCommonStorePath(), getCommonStoreName())?.let { loadCertStoreCertificates(it) } ?: listOf()
-    }
+//    fun saveCertificateToRootCertStore(certFile: File) {
+//        log("$CLASS_NAME.saveCertificateToAppTrustStore() call")
+//        val certificate = createCertFromFile(certFile)
+//        certificate?.let {
+//            saveCertificateToCertStore(
+//                getRootCertStorePath(),
+//                getRootCertStoreName(),
+//                it
+//            )
+//        }
+//    }
 
-    fun saveCertificateToAppTrustStore(certFile: File): X509Certificate? {
-        val certificate = createCertFromFile(certFile)
+//    fun saveCertificateToCommonCertStore(certFile: File) {
+//        log("$CLASS_NAME.saveCertificateToAppCommonStore() call")
+//        val certificate = createCertFromFile(certFile)
+//        certificate?.let {
+//            saveCertificateToCertStore(
+//                getCommonCertStorePath(),
+//                getCommonCertStoreName(),
+//                it
+//            )
+//        }
+//    }
+
+    fun saveCertificateToCertStore(certFile: File): X509Certificate? {
+        var certificate: X509Certificate? = null
+        log("$CLASS_NAME.saveCertificateToCertStore(): Start adding certificate in store")
+        certificate = createCertFromFile(certFile)
         certificate?.let {
-            saveCertToStore(
-                getTrustStorePath(),
-                getTrustStoreName(),
+            saveCertificateToCertStore(
+                getRootCertStorePath(),
+                getRootCertStoreName(),
                 it
             )
-        }
+        } ?: log("$CLASS_NAME.saveCertificateToCertStore(): Can't add certificate in store")
         return certificate
     }
 
-    fun saveCertificateToAppCommonStore(certFile: File): X509Certificate? {
-        val certificate = createCertFromFile(certFile)
-        certificate?.let {
-            saveCertToStore(
-                getCommonStorePath(),
-                getCommonStoreName(),
-                it
-            )
+    fun deleteCertificate(cert: X509Certificate) {
+        log("$CLASS_NAME.deleteCertificate() with alias '${cert.alias()}'")
+        val ks = getKeyStore(getRootCertStorePath(), getRootCertStoreName())
+        try {
+            ks?.let {
+                it.deleteEntry(cert.alias())
+                updateCertStore(getRootCertStorePath(), it)
+                log("$CLASS_NAME.deleteCertificate(): The certificate was deleted successfully")
+            }
+        } catch (e: Exception) {
+            log("$CLASS_NAME.deleteCertificate(): ", e)
         }
-        return certificate
     }
 
-    fun printTrustCertStoreContent() {
-        getKeyStore(getTrustStorePath(), getTrustStoreName())?.let { printCertStoreContent(it) }
+    fun isCertificateInStore(cert: X509Certificate): Boolean {
+        val ks = getKeyStore(getRootCertStorePath(), getRootCertStoreName())
+        val bool = ks?.getCertificate(cert.alias()) != null
+        log("$CLASS_NAME.isCertificateInStore() = $bool")
+        return bool
+    }
+
+    fun printRootCertStoreContent() {
+        getKeyStore(getRootCertStorePath(), getRootCertStoreName())?.let { printCertStoreContent(it) }
     }
 
     fun printCommonCertStoreContent() {
-        getKeyStore(getCommonStorePath(), getCommonStoreName())?.let { printCertStoreContent(it) }
+        getKeyStore(getCommonCertStorePath(), getCommonCertStoreName())?.let { printCertStoreContent(it) }
     }
 
     private fun loadCertStoreCertificates(keyStore: KeyStore): List<X509Certificate> {
@@ -56,19 +109,25 @@ object CertStoreUtil {
         try {
             keyStore.let {
                 val aliases = it.aliases()
-                if (aliases != null) {
+                if (aliases.hasMoreElements()) {
                     while (aliases.hasMoreElements()) {
                         result.add(it.getCertificate(aliases.nextElement()) as X509Certificate)
                     }
+                } else {
+                    log("$CLASS_NAME.loadCertStoreCertificates(): KeyStore.aliases() returned empty list")
                 }
             }
         } catch (e: Exception) {
-            e.printStackTrace()
+            log("$CLASS_NAME.loadCertStoreCertificates(): ", e)
         }
+        log("$CLASS_NAME.loadCertStoreCertificates(): ${result.size} loaded certificates")
         return result
     }
 
+    // converts given file to a X509Certificate instance
+    // or throw an exception
     private fun createCertFromFile(certFile: File): X509Certificate? {
+        log("$CLASS_NAME.createCertFromFile() for file ${certFile.name}")
         val stream = certFile.inputStream()
         return loadCert(stream)
     }
@@ -78,69 +137,100 @@ object CertStoreUtil {
         try {
             val factory = CertificateFactory.getInstance("X.509")
             result =  certStream.use { factory.generateCertificate(it) as X509Certificate }
+            log("$CLASS_NAME.loadCert(): loaded cert ${result.alias()}")
         }  catch (e: Exception) {
-            e.printStackTrace()
+            log("$CLASS_NAME.loadCert(): ", e)
         }
         return result
     }
 
-    private fun saveCertToStore(certStorePath: String, certStoreName: String, cert: X509Certificate) {
+    // requests a KeyStore instance and save provided certificate
+    // only if it is not present int the store
+    private fun saveCertificateToCertStore(certStorePath: String, certStoreName: String, cert: X509Certificate) {
+        log("$CLASS_NAME.saveCertificateToCertStore(): for certificate with alias ${cert.alias()}")
         getKeyStore(certStorePath, certStoreName)?.let { ks ->
-            val certAlias = cert.serialNumber.toString(16)
             val certIsNotPresentInStore = ks.getCertificateAlias(cert) == null
             try {
                 if (certIsNotPresentInStore) {
-                    val trustStoreFile = File(certStorePath)
-                    ks.setCertificateEntry(certAlias, cert)
-                    FileOutputStream(trustStoreFile).use {
-                        ks.store(it, getPassword())
-                    }
-                    log("CertStoreUtil: The certificate was added successfully.")
+                    ks.setCertificateEntry(cert.alias(), cert)
+                    updateCertStore(certStorePath, ks)
+                    log("$CLASS_NAME.saveCertificateToCertStore(): The certificate was added successfully.")
                 } else {
-                    log("CertStoreUtil: The certificate has already existed in the trust store")
+                    log("$CLASS_NAME.saveCertificateToCertStore(): The certificate has already existed in the store")
                 }
             } catch (e: Exception) {
-                e.printStackTrace()
+                log("$CLASS_NAME.saveCertificateToCertStore(): ", e)
             }
         }
     }
 
+    // returns KeyStore instance representing a particular certificate storage file in the device
+    // or just 'empty' KeyStore instance if there is no any file
     private fun getKeyStore(certStorePath: String, certStoreName: String): KeyStore? {
-        log("CertStoreUtil: trying to obtain KeyStore for certStorePath='$certStorePath' and certStoreName='$certStoreName'")
+        log("$CLASS_NAME.getKeyStore(): trying to obtain KeyStore for certStorePath='$certStorePath' and certStoreName='$certStoreName'}")
         var keyStore: KeyStore? = null
-//        if (!isStoreIsExists(certStorePath)) return null
+
         try {
             // init keystore according to JCA docs
-            keyStore = KeyStore.getInstance(certStoreName).apply {
-                FileInputStream(certStorePath).use {
-                    load(it, getPassword())
+            // the type of keystore represented by 'certStoreName',
+            // which is implementation of keystore of type 'JKS' from current CSP
+            keyStore =
+                if (isCertStoreExist(certStorePath)) {
+                    // loading content of existing keyStore (from a file) into memory
+                    KeyStore.getInstance(certStoreName).apply {
+                        FileInputStream(certStorePath).use { fis ->
+                            load(fis, getPassword())
+                        }
+                    }
+                } else {
+                    // creating new empty keyStore
+                    KeyStore.getInstance(certStoreName).apply {
+                        load(null, null)
+                    }
                 }
-            }
         } catch (e: Exception) {
-            e.printStackTrace()
+            log("$CLASS_NAME.getKeyStore(): ", e)
         }
         return keyStore
     }
 
-    private fun isStoreIsExists(certificateStore: String): Boolean {
-        val certStoreFile = File(certificateStore)
+    private fun isCertStoreExist(certStorePath: String): Boolean {
+        val certStoreFile = File(certStorePath)
         return with(certStoreFile) {
             if (this.exists()) {
-                log("CertStoreUtil: Certificate store '$certificateStore' exists")
+                log("$CLASS_NAME.isCertStoreExist(): Certificate store '$certStorePath' exists")
                 true}
             else {
-                log("CertStoreUtil: Certificate store '$certificateStore' doesn't exist")
+                log("$CLASS_NAME.isCertStoreExist(): Certificate store '$certStorePath' doesn't exist")
                 false
             }
         }
     }
 
-    // CSPConfig.getBksTrustStore() = appPath + File.separator + "security"
-    // BKSTrustStore.STORAGE_FILE_TRUST = "cacerts"
-    private fun getTrustStorePath() = CSPConfig.getBksTrustStore() + File.separator + BKSTrustStore.STORAGE_FILE_TRUST
-    private fun getTrustStoreName() = BKSTrustStore.STORAGE_TYPE
-    private fun getCommonStorePath() = "CertStore"
-    private fun getCommonStoreName() = JCP.HD_STORE_NAME
+    private fun updateCertStore(certStorePath: String, keystore: KeyStore) {
+        try {
+            val certStoreFile = File(certStorePath)
+            FileOutputStream(certStoreFile).use {
+                keystore.store(it, getPassword())
+            }
+            log("$CLASS_NAME.updateCertStore(): The certificate store was updated successfully.")
+        } catch (e: Exception) {
+            log("$CLASS_NAME.updateCertStore(): ", e)
+        }
+    }
+
+    private fun X509Certificate.alias() = serialNumber.toString(16)
+
+    // getTrustStorePath() = "/data/user/0/com.letsclimbthis.esigtesttask/security/cacerts"
+    private fun getRootCertStorePath() = CSPConfig.getBksTrustStore() + File.separator + BKSTrustStore.STORAGE_FILE_TRUST
+    private fun getRootCertStoreName() = BKSTrustStore.STORAGE_TYPE
+
+    // getCommonStorePath() = "/data/user/0/com.letsclimbthis.esigtesttask/security/certstore"
+    private fun getCommonCertStorePath() = CSPConfig.getBksTrustStore() + File.separator + "certstore"
+    private fun getCommonCertStoreName() = JCSP.CERT_STORE_NAME
+
+    // password is used to calculate an integrity checksum of the keystore data,
+    // which is appended to the keystore data
     private fun getPassword() = BKSTrustStore.STORAGE_PASSWORD
 
     private fun printCertStoreContent(keyStore: KeyStore) {
@@ -148,15 +238,18 @@ object CertStoreUtil {
             keyStore.let {
                 val aliases = it.aliases()
                 if (aliases != null) {
+                    log("$CLASS_NAME.printCertStoreContent(): certificates in store type: ${keyStore.type}:")
                     while (aliases.hasMoreElements()) {
                         val certificate = it.getCertificate(aliases.nextElement()) as X509Certificate
-                        log(certificate.toString())
+                        log("${certificate.subjectDN}")
                     }
                 }
             }
         } catch (e: Exception) {
-            e.printStackTrace()
+            log("$CLASS_NAME.printCertStoreContent(): ", e)
         }
     }
+
+    private const val CLASS_NAME = "CertStoreUtil"
 
 }

@@ -15,34 +15,68 @@
         android:layout_marginTop="?actionBarSize"
         >
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view_certificate_list"
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab_layout_name_of_certificate_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:gravity="center"
-            android:scrollbars="none"
-            android:tag="recycler_view_directory_list"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@+id/view_pager_certificate_list"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/view_pager_certificate_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/tab_layout_name_of_certificate_list"
+            />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_certificate_list"
+            android:id="@+id/fab_add_certificate"
             android:tag="@string/fab_certificate_list_tag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/spacing_smlarge"
-            android:clickable="true"
-            android:onClick="@{clickHandler::onClick}"
-            android:tint="@android:color/white"
-            app:fabSize="normal"
-            app:layout_anchorGravity="top|right|end"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:fabSize="normal"
+            app:srcCompat="@drawable/ic_add"
+            android:tint="@android:color/white"
             app:rippleColor="@android:color/white"
-            app:srcCompat="@drawable/ic_insert_drive" />
+            android:onClick="@{clickHandler::onClick}"/>
+
+<!--        <androidx.recyclerview.widget.RecyclerView-->
+<!--            android:id="@+id/recycler_view_certificate_list"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:clipToPadding="false"-->
+<!--            android:gravity="center"-->
+<!--            android:scrollbars="none"-->
+<!--            android:tag="recycler_view_directory_list"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--            android:id="@+id/fab_certificate_list"-->
+<!--            android:tag="@string/fab_certificate_list_tag"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_margin="@dimen/spacing_smlarge"-->
+<!--            android:clickable="true"-->
+<!--            android:onClick="@{clickHandler::onClick}"-->
+<!--            android:tint="@android:color/white"-->
+<!--            app:fabSize="normal"-->
+<!--            app:layout_anchorGravity="top|right|end"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:rippleColor="@android:color/white"-->
+<!--            app:srcCompat="@drawable/ic_insert_drive" />-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -19,6 +19,7 @@ import kotlin.properties.Delegates
 import com.letsclimbthis.esigtesttask.databinding.FragmentCertificateListHolderBinding
 import com.letsclimbthis.esigtesttask.log
 import com.letsclimbthis.esigtesttask.ui.certificates.CertificatesUiState
+import com.letsclimbthis.esigtesttask.ui.certificates.recyclerview.AdapterCertificateList1
 import com.letsclimbthis.esigtesttask.ui.utils.displayMessage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -34,7 +35,7 @@ class AdapterPager(fragment: Fragment, private val amountOfPages: Int) :
     // - hosts a particular list of certificates deriving from view model
     class FragmentCertificateListHolder() :
         Fragment(),
-        AdapterCertificateList.OnCertificateListItemClickListener
+        AdapterCertificateList1.OnCertificateListItemClickListener
     {
 
         private val viewModel: ViewModelCertificates by lazy {
@@ -57,8 +58,8 @@ class AdapterPager(fragment: Fragment, private val amountOfPages: Int) :
 
         override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
             resolveFragmentsPositionInViewPagerAdapter()
-            initRecyclerView()
             subscribeUi()
+            initRecyclerView()
         }
 
         // receiving position sent from 'PagerAdapter.createFragment()' method
@@ -71,12 +72,12 @@ class AdapterPager(fragment: Fragment, private val amountOfPages: Int) :
         private fun initRecyclerView() {
             binding.recyclerViewCertificateList.also {
 
-                it.adapter = AdapterCertificateList(
-                    viewModel.getCertificateList(positionInViewPagerAdapter),
+                it.layoutManager = LinearLayoutManager(requireContext())
+
+                it.adapter = AdapterCertificateList1(
+                    listOf(),
                     this
                 )
-
-                it.layoutManager = LinearLayoutManager(requireContext())
 
                 it.addOnScrollListener(object: OnScrollListener() {
                     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -103,7 +104,8 @@ class AdapterPager(fragment: Fragment, private val amountOfPages: Int) :
                         when(state) {
 
                             is CertificatesUiState.CertificateListLoaded ->
-                                notifyDataSetChanged()
+                                (this as AdapterCertificateList1).setNewList(viewModel.getCertificateList(positionInViewPagerAdapter))
+//                                notifyDataSetChanged()
 
                             is CertificatesUiState.CertificateAdded ->
                                 notifyItemInserted(state.newIndex)

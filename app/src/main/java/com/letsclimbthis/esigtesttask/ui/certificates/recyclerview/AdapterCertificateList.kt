@@ -41,8 +41,8 @@ class AdapterCertificateList (
         val tvCertificateIssuerDetail: TextView = view.findViewById(R.id.tv_certificate_issuer_detail)
         val tvCertificateSubjectDetail: TextView = view.findViewById(R.id.tv_certificate_subject_detail)
         val tvCertificatePeriodDetail: TextView = view.findViewById(R.id.tv_certificate_period_detail)
-        private val lytCertificateProperties: ConstraintLayout = view.findViewById(R.id.lyt_certificate_properties)
-        private val expand: ImageButton = view.findViewById(R.id.bt_certificate_expand_collapse_properties)
+        val lytCertificateProperties: ConstraintLayout = view.findViewById(R.id.lyt_certificate_properties)
+        val expand: ImageButton = view.findViewById(R.id.bt_certificate_expand_collapse_properties)
         private val delete: ImageButton = view.findViewById(R.id.ib_delete_certificate)
 
         init {
@@ -78,7 +78,10 @@ class AdapterCertificateList (
         val cert = certificatesList[position]
         with((holder as CertificatesItemViewHolder)) {
 
-
+            if (expand.rotation == 180f) {
+                expand.rotation = 0f
+                lytCertificateProperties.visibility = View.GONE *
+            }
 
             // TODO: Add noInfo() extension
             tvCertificateSubject.text = cert.getSubjectName()

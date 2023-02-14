@@ -106,7 +106,8 @@ object PKCS7 {
         else {
             log("$className: start building keychain")
 
-            val rootAndCommon = CertStoreUtil.loadCertificatesFromStoreByCategory()
+//            val rootAndCommon = CertStoreUtil.loadCertificatesFromStoreByCategory()
+            val rootAndCommon = listOf<List<X509Certificate>>().toTypedArray()
 
             // все корневые сертификаты необходимо добавить в TrustAnchor
             // для корректного построения цепочки

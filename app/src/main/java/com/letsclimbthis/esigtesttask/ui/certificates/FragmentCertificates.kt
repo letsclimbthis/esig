@@ -19,8 +19,8 @@ import com.letsclimbthis.esigtesttask.ui.certificates.viewpager.AdapterPager
 import com.letsclimbthis.esigtesttask.ui.utils.URIPathHelper
 
 class FragmentCertificates :
-    Fragment(),
-    OnClickListener
+    Fragment()
+//    OnClickListener
 {
 
     private val viewModel: ViewModelCertificates by lazy {
@@ -66,30 +66,30 @@ class FragmentCertificates :
 //        viewModel.fab = binding.fabAddCertificate
     }
 
-    override fun onClick(p0: View?) {
-        p0?.let {
-            when(it.tag) {
-                fab_certificate_list_tag -> {
-                    getContent.launch("*/*")
-                }
-                else -> {}
-            }
-        }
-    }
+//    override fun onClick(p0: View?) {
+//        p0?.let {
+//            when(it.tag) {
+//                fab_certificate_list_tag -> {
+//                    getContent.launch("*/*")
+//                }
+//                else -> {}
+//            }
+//        }
+//    }
 
-    // process uri of file picked with outer activity
-    private val getContent = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-        uri?.let {
-            val filePath = URIPathHelper.getPath(requireContext(), uri)
-            if(filePath != null) {
-                viewModel.addCertificate(viewPager.currentItem, filePath)
-                log("$className: Received URI from outer activity for file: $filePath")
-
-            } else {
-                log("$className: Received URI from outer activity is null")
-            }
-        }
-    }
+//    // process uri of file picked with outer activity
+//    private val getContent = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+//        uri?.let {
+//            val filePath = URIPathHelper.getPath(requireContext(), uri)
+//            if(filePath != null) {
+//                viewModel.addCertificate(viewPager.currentItem, filePath)
+//                log("$className: Received URI from outer activity for file: $filePath")
+//
+//            } else {
+//                log("$className: Received URI from outer activity is null")
+//            }
+//        }
+//    }
 
     private val className = "FragmentCertificates"
 

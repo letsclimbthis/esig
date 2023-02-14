@@ -1,19 +1,18 @@
 package com.letsclimbthis.esigtesttask.ui.certificates.recyclerview
 
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.letsclimbthis.esigtesttask.R
 import com.letsclimbthis.esigtesttask.log
-import com.letsclimbthis.esigtesttask.ui.utils.getSubjectName
-import com.letsclimbthis.esigtesttask.ui.utils.toDateDays
-import com.letsclimbthis.esigtesttask.ui.utils.toDateMinutes
-import com.letsclimbthis.esigtesttask.ui.utils.toggleSection
+import com.letsclimbthis.esigtesttask.ui.utils.*
 import java.security.cert.X509Certificate
 
 class AdapterCertificateList (
@@ -69,6 +68,7 @@ class AdapterCertificateList (
         }
     }
 
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.certificates_list_item, parent, false)
         return CertificatesItemViewHolder(view)
@@ -80,7 +80,7 @@ class AdapterCertificateList (
 
             if (expand.rotation == 180f) {
                 expand.rotation = 0f
-                lytCertificateProperties.visibility = View.GONE *
+                lytCertificateProperties.visibility = View.GONE
             }
 
             // TODO: Add noInfo() extension

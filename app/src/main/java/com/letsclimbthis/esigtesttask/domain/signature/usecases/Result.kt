@@ -1,12 +1,12 @@
 package com.letsclimbthis.esigtesttask.domain.signature.usecases
 
-/**
- * A generic class that holds a value or error.
- * @param <T>
+/*
+ * A generic class that holds a value or an error.
  */
 sealed class Result<out R> {
 
     data class Success<out T>(val data: T) : Result<T>()
+
     data class Error(val exception: Exception) : Result<Nothing>()
 
     override fun toString(): String {

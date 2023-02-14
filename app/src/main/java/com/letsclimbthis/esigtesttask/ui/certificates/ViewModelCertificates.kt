@@ -4,16 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.letsclimbthis.esigtesttask.domain.signature.CertStoreUtil
-import com.letsclimbthis.esigtesttask.log
-import com.letsclimbthis.esigtesttask.ui.utils.getSubjectName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.io.IOException
 import java.security.cert.X509Certificate
 import java.util.*
 
@@ -38,7 +34,8 @@ class ViewModelCertificates : ViewModel() {
     val amountOfCertificateLists = certificateListsNames.size
 
     init {
-        loadCertListFromStore()
+        loadRootCertificates()
+        loadCommonCertificates()
     }
 
     fun getCertificateListName(index: Int): String {
@@ -54,94 +51,138 @@ class ViewModelCertificates : ViewModel() {
     }
 
     fun addCertificate(pageIndex: Int, path: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-
-            val currentList = when (pageIndex) {
-                0 -> _rootCertificateList
-                1 -> _commonCertificateList
-                else -> null
-            }
-
-            currentList?.let { list ->
-                viewModelScope.launch(Dispatchers.IO) {
-                    val adding = async {
-                        CertStoreUtil.saveCertificateToCertStore(
-                            File(path)
-                        )
-                    }
-                    val certificate = adding.await()
-
-                    withContext(Dispatchers.Main) {
-                        certificate?.let { cert ->
-                            if (!CertStoreUtil.isCertificateInStore(cert)) {
-                                _uiState.value = CertificatesUiState.Failed(
-                                    pageIndex,
-                                    "An error occurred while adding certificate"
-                                )
-                            } else {
-                                list.add(cert)
-                                _uiState.value = CertificatesUiState.CertificateAdded(
-                                    pageIndex,
-                                    list.size - 1
-                                )
-                            }
-                        }
-                    }
-                }
-            }
+        when (pageIndex) {
+            0 ->
+                addCertificateToRootCertStore(
+                    path,
+                    CertStoreUtil::saveCertificateToRootCertStore,
+                    CertStoreUtil::isCertificateInRootCertStore,
+                    pageIndex,
+                    _rootCertificateList
+                )
+            1 ->
+                addCertificateToRootCertStore(
+                    path,
+                    CertStoreUtil::saveCertificateToCommonCertStore,
+                    CertStoreUtil::isCertificateInCommonCertStore,
+                    pageIndex,
+                    _commonCertificateList
+                )
+            else -> {}
         }
     }
 
     fun deleteCertificate(pageIndex: Int, indexInList: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val currentList = when(pageIndex) {
-                0 -> _rootCertificateList
-                1 -> _commonCertificateList
-                else -> null
+        when (pageIndex) {
+            0 -> {
+                deleteCertificate(
+                    indexInList,
+                    CertStoreUtil::deleteCertificateFromRootCertStore,
+                    CertStoreUtil::isCertificateInRootCertStore,
+                    pageIndex,
+                    _rootCertificateList
+                )
             }
+            1 -> {
+                deleteCertificate(
+                    indexInList,
+                    CertStoreUtil::deleteCertificateFromCommonCertStore,
+                    CertStoreUtil::isCertificateInCommonCertStore,
+                    pageIndex,
+                    _commonCertificateList
+                )
+            }
+            else -> {}
+        }
+    }
 
-            currentList?.let {
-                val certToDelete = it[indexInList]
+    private fun addCertificateToRootCertStore(
+        path: String,
+        addFunc: (File) -> X509Certificate?,
+        checkFunc: (X509Certificate) -> Boolean,
+        pageIndex: Int,
+        list: MutableList<X509Certificate>
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
 
-                viewModelScope.launch(Dispatchers.IO) {
-                    val deleting = launch {
-                        CertStoreUtil.deleteCertificate(certToDelete)
-                    }
-                    deleting.join()
+            val adding = async {
+                addFunc(File(path))
+            }
+            val certificate = adding.await()
 
-                    withContext(Dispatchers.Main) {
-                        if (CertStoreUtil.isCertificateInStore(certToDelete)) {
-                            _uiState.value = CertificatesUiState.Failed(
-                                pageIndex,
-                                "An error occurred while deleting certificate"
-                            )
-                        } else {
-                            it.removeAt(indexInList)
-                            _uiState.value = CertificatesUiState.CertificateDeleted(pageIndex, indexInList)
-                        }
-                    }
+            if (certificate == null || !checkFunc(certificate)) {
+                withContext(Dispatchers.Main) {
+                    _uiState.value = CertificatesUiState.Failed(
+                        pageIndex,
+                        "An error occurred while adding certificate"
+                    )
+                }
+
+            } else {
+                withContext(Dispatchers.Main) {
+                    list.add(certificate)
+                    _uiState.value = CertificatesUiState.CertificateAdded(
+                        pageIndex,
+                        list.size - 1
+                    )
                 }
             }
         }
     }
 
-    private fun loadCertListFromStore() {
+
+    private fun deleteCertificate(
+        indexInList: Int,
+        deleteFunc: (X509Certificate) -> Unit,
+        checkFunc: (X509Certificate) -> Boolean,
+        pageIndex: Int,
+        list: MutableList<X509Certificate>
+    ) {
+        val certificate = list[indexInList]
+
         viewModelScope.launch(Dispatchers.IO) {
-            val listLoading = async { CertStoreUtil.loadCertificatesFromStoreByCategory() }
-            // returns array of list: under index 0 - root certs, under index 1 - common certs
+            val deleting = launch {
+                deleteFunc(certificate)
+            }
+            deleting.join()
+
+            if (checkFunc(certificate)) {
+                withContext(Dispatchers.Main) {
+                    _uiState.value = CertificatesUiState.Failed(
+                        pageIndex,
+                        "An error occurred while deleting certificate"
+                    )
+                }
+            } else {
+                withContext(Dispatchers.Main) {
+                    list.removeAt(indexInList)
+                    _uiState.value = CertificatesUiState.CertificateDeleted(pageIndex, indexInList)
+                }
+            }
+        }
+    }
+
+    private fun loadRootCertificates() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val listLoading = async { CertStoreUtil.loadRootCertStoreCertificates() }
             val list = listLoading.await()
 
             withContext(Dispatchers.Main) {
                 _rootCertificateList
-                    .addAll(
-                        list[0].filter { it.getSubjectName().isNotEmpty() }
-                    )
+                    .addAll(list)
                 _uiState.value = CertificatesUiState.CertificateListLoaded(0)
+            }
+        }
+    }
 
+    private fun loadCommonCertificates() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val listLoading = async { CertStoreUtil.loadCommonCertStoreCertificates() }
+            val list = listLoading.await()
+
+            withContext(Dispatchers.Main) {
                 _commonCertificateList
-                    .addAll(
-                        list[1].filter { it.getSubjectName().isNotEmpty() }
-                    )
+                    .addAll(list)
                 _uiState.value = CertificatesUiState.CertificateListLoaded(1)
             }
         }

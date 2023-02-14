@@ -1,9 +1,11 @@
 package com.letsclimbthis.esigtesttask.ui.certificates.viewpager
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -14,9 +16,12 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.letsclimbthis.esigtesttask.ui.certificates.ViewModelCertificates
 import kotlin.properties.Delegates
 import com.letsclimbthis.esigtesttask.databinding.FragmentCertificateListHolderBinding
+import com.letsclimbthis.esigtesttask.log
 import com.letsclimbthis.esigtesttask.ui.certificates.CertificatesUiState
 import com.letsclimbthis.esigtesttask.ui.certificates.recyclerview.AdapterCertificateList
+import com.letsclimbthis.esigtesttask.ui.utils.URIPathHelper
 import com.letsclimbthis.esigtesttask.ui.utils.displayMessage
+import com.letsclimbthis.esigtesttask.ui.utils.toggleSection
 
 private const val KEY_FOR_FRAGMENT_INDEX = "fragmentIndex"
 
@@ -29,7 +34,8 @@ class AdapterPager(fragment: Fragment, private val amountOfPages: Int) :
     // - hosts a particular list of certificates deriving from view model
     class FragmentCertificateListHolder() :
         Fragment(),
-        AdapterCertificateList.OnCertificateListItemClickListener
+        AdapterCertificateList.OnCertificateListItemClickListener,
+        View.OnClickListener
     {
 
         private val viewModel: ViewModelCertificates by lazy {
@@ -47,6 +53,7 @@ class AdapterPager(fragment: Fragment, private val amountOfPages: Int) :
             savedInstanceState: Bundle?
         ): View {
             _binding = FragmentCertificateListHolderBinding.inflate(inflater, container, false)
+            binding.clickHandler = this
             return binding.root
         }
 
@@ -121,11 +128,39 @@ class AdapterPager(fragment: Fragment, private val amountOfPages: Int) :
             viewModel.deleteCertificate(positionInViewPagerAdapter, itemIndexInList)
         }
 
+        override fun onClick(p0: View?) {
+            log("$className.onClick(): ")
+            p0?.let {
+                when(p0.tag) {
+                    "fab_certificate_list" -> {
+                        log("fab_certificate_list")
+                        getContent.launch("*/*")
+                    }
+                }
+            }
+        }
+
+        // process uri of file picked with outer activity
+        private val getContent = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            uri?.let {
+                val filePath = URIPathHelper.getPath(requireContext(), uri)
+                if(filePath != null) {
+                    viewModel.addCertificate(positionInViewPagerAdapter, filePath)
+                    log("$className: Received URI from outer activity for file: $filePath")
+
+                } else {
+                    log("$className: Received URI from outer activity is null")
+                }
+            }
+        }
+
         override fun onDestroyView() {
             super.onDestroyView()
             _binding = null
             viewModel.uiState.removeObserver(certificatesUiStateObserver!!)
         }
+
+        private val className = "FragmentCertificateListHolder"
     }
 
     override fun getItemCount() = amountOfPages

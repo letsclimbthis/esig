@@ -35,20 +35,6 @@
             app:layout_constraintTop_toBottomOf="@+id/tab_layout_name_of_certificate_list"
             />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_add_certificate"
-            android:tag="@string/fab_certificate_list_tag"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/spacing_smlarge"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:fabSize="normal"
-            app:srcCompat="@drawable/ic_add"
-            android:tint="@android:color/white"
-            app:rippleColor="@android:color/white"
-            android:onClick="@{clickHandler::onClick}"/>
-
 <!--        <androidx.recyclerview.widget.RecyclerView-->
 <!--            android:id="@+id/recycler_view_certificate_list"-->
 <!--            android:layout_width="match_parent"-->

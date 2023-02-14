@@ -63,7 +63,7 @@ class FragmentCertificates :
 
         fab_certificate_list_tag = resources.getString(R.string.fab_certificate_list_tag)
 
-        viewModel.fab = binding.fabAddCertificate
+//        viewModel.fab = binding.fabAddCertificate
     }
 
     override fun onClick(p0: View?) {

@@ -37,9 +37,6 @@ class ViewModelCertificates : ViewModel() {
     // used by viewpager to resolve amount of pages
     val amountOfCertificateLists = certificateListsNames.size
 
-    var fab: FloatingActionButton? = null
-
-
     init {
         loadCertListFromStore()
     }

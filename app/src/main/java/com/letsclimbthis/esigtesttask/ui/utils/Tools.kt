@@ -79,11 +79,6 @@ fun Fragment.displayMessage(message: String) {
     }
 }
 
-//fun X509Certificate.getSubject(): String {
-//    val s = subjectDN.name.substring(subjectDN.name.indexOf("CN="))
-//    return s.substring(3 until s.indexOf(","))
-//}
-
 fun X509Certificate.getIssuerName(): String {
     val s = issuerDN.toString().substring(subjectDN.toString().indexOf("CN="))
     return s.substring(3 until s.indexOf(","))

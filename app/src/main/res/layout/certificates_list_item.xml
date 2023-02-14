@@ -6,7 +6,7 @@
     <data>
         <variable
             name="clickHandler"
-            type="com.letsclimbthis.esigtesttask.ui.certificates.recyclerview.AdapterCertificateList.CertificatesItemViewHolder" />
+            type="com.letsclimbthis.esigtesttask.ui.certificates.recyclerview.AdapterCertificateListBinding.CertificatesItemViewHolder" />
         <variable
             name="certSubject"
             type="String" />

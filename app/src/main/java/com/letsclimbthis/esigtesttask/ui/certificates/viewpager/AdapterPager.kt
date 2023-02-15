@@ -104,18 +104,25 @@ class AdapterPager(fragment: Fragment, private val amountOfPages: Int) :
                     if (state.pageIndex == positionInViewPagerAdapter) {
                         when(state) {
 
-                            is CertificatesUiState.CertificateListLoaded ->
-                                (this as AdapterCertificateList).setNewList(viewModel.getCertificateList(positionInViewPagerAdapter))
-//                                notifyDataSetChanged()
+                            is CertificatesUiState.CertificateListLoaded -> {
+                                (this as AdapterCertificateList).setNewList(
+                                    viewModel.getCertificateList(
+                                        positionInViewPagerAdapter
+                                    )
+                                )
+                            }
 
-                            is CertificatesUiState.CertificateAdded ->
+                            is CertificatesUiState.CertificateAdded -> {
                                 notifyItemInserted(state.newIndex)
+                            }
 
-                            is CertificatesUiState.CertificateDeleted ->
+                            is CertificatesUiState.CertificateDeleted -> {
                                 notifyItemRemoved(state.removedIndex)
+                            }
 
-                            is CertificatesUiState.Failed ->
+                            is CertificatesUiState.Failed -> {
                                 displayMessage(state.message)
+                            }
                         }
                     }
                 }

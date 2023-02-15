@@ -53,7 +53,7 @@ class ViewModelCertificates : ViewModel() {
     fun addCertificate(pageIndex: Int, path: String) {
         when (pageIndex) {
             0 ->
-                addCertificateToRootCertStore(
+                addCertificate(
                     path,
                     CertStoreUtil::saveCertificateToRootCertStore,
                     CertStoreUtil::isCertificateInRootCertStore,
@@ -61,7 +61,7 @@ class ViewModelCertificates : ViewModel() {
                     _rootCertificateList
                 )
             1 ->
-                addCertificateToRootCertStore(
+                addCertificate(
                     path,
                     CertStoreUtil::saveCertificateToCommonCertStore,
                     CertStoreUtil::isCertificateInCommonCertStore,
@@ -96,7 +96,7 @@ class ViewModelCertificates : ViewModel() {
         }
     }
 
-    private fun addCertificateToRootCertStore(
+    private fun addCertificate(
         path: String,
         addFunc: (File) -> X509Certificate?,
         checkFunc: (X509Certificate) -> Boolean,
@@ -153,6 +153,7 @@ class ViewModelCertificates : ViewModel() {
                         "An error occurred while deleting certificate"
                     )
                 }
+
             } else {
                 withContext(Dispatchers.Main) {
                     list.removeAt(indexInList)

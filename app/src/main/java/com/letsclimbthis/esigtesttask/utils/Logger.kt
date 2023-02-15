@@ -19,14 +19,14 @@ fun log(msg: String) {
 
 fun log(e: Exception) {
     val st = e.stackTrace.fold("") { prev, ste -> "$prev\n$ste" }
-    logMessage = "$logMessage\n$st"
+    logMessage = "$logMessage\n$e\n$st"
     Log.d("mytag", st)
 
 }
 
 fun log(msg: String, e: Exception) {
     val st = e.stackTrace.fold("") { prev, ste -> "$prev\n$ste" }
-    val s = "$msg\n$st"
+    val s = "$msg\n$e\n$st"
     logMessage = "$logMessage\n$s"
     Log.d("mytag", s)
 }

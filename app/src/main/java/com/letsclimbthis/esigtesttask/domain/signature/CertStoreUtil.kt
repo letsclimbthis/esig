@@ -171,7 +171,8 @@ object CertStoreUtil {
         try {
             ks?.let {
                 it.deleteEntry(cert.alias())
-                updateCertStore(getRootCertStorePath(), it)
+                val path = resolveCertStorePath(certStoreName)
+                updateCertStore(path, it)
                 log("$CLASS_NAME.deleteCertificate(): The certificate was deleted successfully")
             }
         } catch (e: Exception) {

@@ -106,18 +106,14 @@ object PKCS7 {
         else {
             log("$className: start building keychain")
 
-//            val rootAndCommon = CertStoreUtil.loadCertificatesFromStoreByCategory()
-            val rootAndCommon = listOf<List<X509Certificate>>().toTypedArray()
-
             // все корневые сертификаты необходимо добавить в TrustAnchor
             // для корректного построения цепочки
-            val rootCerts = rootAndCommon[0]
+            val rootCerts = CertStoreUtil.loadRootCertStoreCertificates()
             val trustAnchorSet = HashSet<TrustAnchor>()
             for (rc in rootCerts) {
                 trustAnchorSet.add(TrustAnchor(rc, null))
             }
             log("$className: trustAnchorSet initialized")
-
 
             val builderParams = PKIXBuilderParameters(trustAnchorSet, null as CertSelector?)
             builderParams.sigProvider = null as String?
@@ -129,11 +125,7 @@ object PKCS7 {
             // при условии что в имеющихся сертификатах есть ссылки, на недостающие
 
             // получаем промежуточные сертификаты из локального хранилища
-//            val _certs = CertStoreUtil.loadCommonCertStoreCertificates().toTypedArray()
-//            val _certs = rootAndCommon[1].toTypedArray()
-            val _certs = rootAndCommon[1].toTypedArray()
-            // /storage/emulated/0/Sig/CA_FNS_Russia_2019_UL.crt
-
+            val _certs = CertStoreUtil.loadCommonCertStoreCertificates().toTypedArray()
             val certs: MutableList<Certificate> = ArrayList(0)
             for (i in _certs.indices) certs.add(_certs[i])
             val collectionCertStoreParameters = CollectionCertStoreParameters(certs)
